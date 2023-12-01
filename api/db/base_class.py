@@ -13,6 +13,5 @@ meta = MetaData(
 )
 
 
-
 mapper_registry = registry(metadata=meta)
 Base = mapper_registry.generate_base()

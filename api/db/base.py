@@ -1,3 +1,3 @@
-from api.models.user import User # noqa
+from api.db.models import User # noqa
 
-from api.db.base_class import Base # noqa
+from api.db.base_class import Base

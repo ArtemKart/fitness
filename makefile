@@ -31,7 +31,7 @@ run_docker:
 		docker compose up -d --build
 
 run_server:
-	. $(VENV_ACTIVATE) && uvicorn --reload api.main:news_app
+	. $(VENV_ACTIVATE) && uvicorn --reload api.main:app
 
 down:
 	docker compose down --volumes
