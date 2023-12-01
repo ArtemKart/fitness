@@ -14,5 +14,5 @@ SQLALCHEMY_DATABASE_URL = str(
         database=settings.POSTGRES_DB,
     )
 )
-# engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-# SessionLocal = sessionmaker(engine, expire_on_commit=False, autocommit=False, autoflush=False)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(engine, expire_on_commit=False, autocommit=False, autoflush=False)
