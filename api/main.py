@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi_users import FastAPIUsers
 
-from api.auth.auth import auth_backend
+from api.auth.base_config import auth_backend
 from api.auth.manager import get_user_manager
 from api.auth.schemas import UserRead, UserCreate
 from api.db.models import User
