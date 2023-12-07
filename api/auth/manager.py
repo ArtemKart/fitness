@@ -3,7 +3,8 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
-from api.db.models import User, get_user_db
+from api.auth.models import User
+from api.auth.utils import get_user_db
 
 SECRET = "SECRET"
 

@@ -3,9 +3,9 @@ from fastapi_users import FastAPIUsers
 
 from api.auth.base_config import auth_backend
 from api.auth.manager import get_user_manager
+from api.auth.models import User
 from api.auth.schemas import UserRead, UserCreate
-from api.db.models import User
-
+from api.weigh_ins.router import weigh_router
 
 app = FastAPI()
 
@@ -32,8 +32,11 @@ app.include_router(
     tags=["auth"],
 )
 
+app.include_router(weigh_router)
+
 current_user = fastapi_users.current_user()
 
 @app.get("/protected-route")
 def protected_route(user: User = Depends(current_user)):
     return f"Hello, {user.email}"
+

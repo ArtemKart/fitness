@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from api.db.base_class import Base
+# from api.db.base_class import Base
 from api.db.session import SQLALCHEMY_DATABASE_URL
-
+from api.db.base import Base
 
 config = context.config
 
