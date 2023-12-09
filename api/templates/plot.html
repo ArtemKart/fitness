@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1>My Web Page</h1>
+    <p>Some content before the Plotly chart.</p>
+    <!-- Вставьте код графика Plotly в определенное место -->
+    <div id="plotly-chart"></div>
+    <script>
+        {{ plotly_script | safe }}
+    </script>
+    <p>Some content after the Plotly chart.</p>
+{% endblock %}
