@@ -1,17 +1,17 @@
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from typing import AsyncGenerator
-from api.config import settings
+from api.config import db_settings
 
 
 SQLALCHEMY_DATABASE_URL = str(
     URL.create(
         drivername="postgresql+asyncpg",
-        username=settings.POSTGRES_USER,
-        password=settings.POSTGRES_PASSWORD,
-        host=settings.POSTGRES_HOST,
-        port=settings.POSTGRES_PORT,
-        database=settings.POSTGRES_DB,
+        username=db_settings.POSTGRES_USER,
+        password=db_settings.POSTGRES_PASSWORD,
+        host=db_settings.POSTGRES_HOST,
+        port=db_settings.POSTGRES_PORT,
+        database=db_settings.POSTGRES_DB,
     )
 )
 
