@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style>
             #myAccountBtn:hover,
+            #loginBtn:hover,
+            #registrationBtn:hover,
             #logoutBtn:hover {
                 color: rebeccapurple;
                 cursor: pointer;
@@ -21,25 +23,46 @@
         <ul class="flex ml-10">
             <li>Test</li>
         </ul>
-        <ul class="flex gap-5 mr-10">
-            <li id="myAccountBtn">My Account</li>
-            <li id="logoutBtn">Logout</li>
-        </ul>
-    </nav>
-    <hr>
-    <div id="content">
         {% block content %}{% endblock %}
-    </div>
-     <script>
-            var myAccountBtn = document.getElementById("myAccountBtn");
-            var logoutBtn = document.getElementById("logoutBtn");
-            myAccountBtn.addEventListener("click", function() {
-                window.location.href = "/my-account";
-            });
+        {% if is_authenticated %}
+            <ul class="flex gap-5 mr-10">
+                <li id="myAccountBtn">My Account</li>
+                <li id="logoutBtn">Logout</li>
+            </ul>
+    </nav>
+        <hr>
+        <div id="content">
+        </div>
+         <script>
+                var myAccountBtn = document.getElementById("myAccountBtn");
+                var logoutBtn = document.getElementById("logoutBtn");
+                myAccountBtn.addEventListener("click", function() {
+                    window.location.href = "/profile";
+                });
 
-            logoutBtn.addEventListener("click", function() {
-                 window.location.href = "/logout";
-            });
-        </script>
+                logoutBtn.addEventListener("click", function() {
+                     window.location.href = "/logout";
+                });
+            </script>
+        {% else %}
+            <ul class="flex gap-5 mr-10">
+                <li id="loginBtn">Login</li>
+                <li id="registrationBtn">Registration</li>
+            </ul>
+        <hr>
+        <div id="content">
+        </div>
+         <script>
+                var loginBtn = document.getElementById("loginBtn");
+                var registrationBtn = document.getElementById("registrationBtn");
+                loginBtn.addEventListener("click", function() {
+                    window.location.href = "/login";
+                });
+
+                registrationBtn.addEventListener("click", function() {
+                     window.location.href = "/register";
+                });
+            </script>
+    {% endif %}
 </body>
 </html>

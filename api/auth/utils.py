@@ -12,6 +12,7 @@ from api.db.session import get_async_session
 from api.auth.schemas import UserCreate, UserRead
 from fastapi.responses import RedirectResponse
 
+
 async def _get_user_by_email_for_auth(
     email: str, session: AsyncSession = Depends(get_async_session)
 ) -> User | None:
@@ -46,9 +47,9 @@ async def create_access_token(
 async def get_current_user_from_token(
     session: AsyncSession = Depends(get_async_session),
     token: str = Depends(oauth2_scheme),
-) -> User | RedirectResponse:
+) -> User | None:
     if token is None:
-        return RedirectResponse(url="/token")
+        return None
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

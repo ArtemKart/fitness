@@ -1,8 +1,10 @@
 from datetime import timedelta
 
-from fastapi import Depends, APIRouter, HTTPException, status
+from fastapi import Depends, APIRouter, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
+from starlette.responses import HTMLResponse, RedirectResponse
 
 from api.auth.utils import (
     authenticate_user,
@@ -12,9 +14,32 @@ from api.auth.utils import (
 from api.config import auth_settings
 from api.auth.schemas import Token, UserCreate
 from api.db.session import get_async_session
+from api.auth.login_form import LoginForm
+from api.pages.template import templates
 
 auth_router = APIRouter(prefix="/login", tags=["Auth"])
 register_router = APIRouter(prefix="/register", tags=["Register"])
+
+
+@auth_router.get("/", response_class=HTMLResponse)
+async def authentication_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+
+@auth_router.post("/", response_class=HTMLResponse)
+async def login(request: Request, session: AsyncSession = Depends(get_async_session)):
+    try:
+        form = LoginForm(request)
+        await form.create_oauth_form()
+        response = RedirectResponse(url="/profile", status_code=status.HTTP_302_FOUND)
+        validate_user_cookie = await login_for_access_token(response=response, form_data=form, db=session)
+        if not validate_user_cookie:
+            msg = "Incorrect Username or Password"
+            return templates.TemplateResponse("login.html", {"request": request, "msg": msg})
+        return response
+    except HTTPException:
+        msg = "Unknown Error"
+        return templates.TemplateResponse("login.html", {"request": request, "msg": msg})
 
 
 @auth_router.post("/token", response_model=Token)
