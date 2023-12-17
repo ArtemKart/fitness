@@ -5,6 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+            #myAccountBtn:hover,
+            #logoutBtn:hover {
+                color: rebeccapurple;
+                cursor: pointer;
+            }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     {% block head %}{% endblock %}
     <title>Test</title>
@@ -15,13 +22,24 @@
             <li>Test</li>
         </ul>
         <ul class="flex gap-5 mr-10">
-            <li>Мой аккаунт</li>
-            <li>Выйти</li>
+            <li id="myAccountBtn">My Account</li>
+            <li id="logoutBtn">Logout</li>
         </ul>
     </nav>
     <hr>
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+     <script>
+            var myAccountBtn = document.getElementById("myAccountBtn");
+            var logoutBtn = document.getElementById("logoutBtn");
+            myAccountBtn.addEventListener("click", function() {
+                window.location.href = "/my-account";
+            });
+
+            logoutBtn.addEventListener("click", function() {
+                 window.location.href = "/logout";
+            });
+        </script>
 </body>
 </html>

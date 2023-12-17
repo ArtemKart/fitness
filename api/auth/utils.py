@@ -9,7 +9,8 @@ from api.config import auth_settings
 from api.db.dals import UserDAL
 from api.db.models import User
 from api.db.session import get_async_session
-
+from api.auth.schemas import UserCreate, UserRead
+from fastapi.responses import RedirectResponse
 
 async def _get_user_by_email_for_auth(
     email: str, session: AsyncSession = Depends(get_async_session)
@@ -36,20 +37,28 @@ async def create_access_token(
     expire_time = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire_time})
     return jwt.encode(
-        to_encode, auth_settings.JWT_SECRET_KEY, auth_settings.ENCODING_ALGORITHM,
+        to_encode,
+        auth_settings.JWT_SECRET_KEY,
+        auth_settings.ENCODING_ALGORITHM,
     )
 
 
 async def get_current_user_from_token(
-    token: str = Depends(oauth2_scheme),
     session: AsyncSession = Depends(get_async_session),
-) -> User:
+    token: str = Depends(oauth2_scheme),
+) -> User | RedirectResponse:
+    if token is None:
+        return RedirectResponse(url="/token")
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
     )
     try:
-        payload = jwt.decode(token, auth_settings.JWT_SECRET_KEY, algorithms=[auth_settings.ENCODING_ALGORITHM])
+        payload = jwt.decode(
+            token,
+            auth_settings.JWT_SECRET_KEY,
+            algorithms=[auth_settings.ENCODING_ALGORITHM],
+        )
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
@@ -59,3 +68,19 @@ async def get_current_user_from_token(
     if user is not None:
         return user
     raise credentials_exception
+
+
+async def create_user(data: UserCreate, session: AsyncSession):
+    async with session.begin():
+        user = await UserDAL(session).create_user(
+            username=data.username,
+            email=data.email,
+            name=data.name,
+            hashed_password=hasher.get_password_hash(data.password),
+        )
+        if user is not None:
+            return UserRead(
+                email=user.email,
+                name=user.name,
+            )
+        raise HTTPException(status_code=503, detail=f"User has not beed created")

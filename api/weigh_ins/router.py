@@ -5,11 +5,10 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 import plotly.io as pio
 
-from api.db.models import User
+from api.db.models import User, Weigh
 from api.config import API_PATH
 from api.db.session import get_async_session
-from api.pages.router import templates
-from api.weigh_ins.models import Weigh
+from api.pages.main_page.router import templates
 from api.weigh_ins.schemas import WeighCreate
 from api.weigh_ins.service import get_history_weighs_plot
 

@@ -8,7 +8,9 @@ class UserRead(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
+    email: str
     name: str
+    password: str
 
 
 class Token(BaseModel):

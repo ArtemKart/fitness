@@ -1,5 +1,4 @@
 from sqlalchemy import MetaData
-# from importlib.metadata import metadata # noqa
 from sqlalchemy.orm import registry
 
 meta = MetaData(

@@ -3,9 +3,11 @@ import os
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 from pathlib import Path
+
 load_dotenv()
 
 API_PATH = Path(__file__).parent
+
 
 class DbSettings(BaseSettings):
     POSTGRES_USER: str = os.environ.get("POSTGRES_USER")
