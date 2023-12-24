@@ -5,7 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.base_config import oauth2_scheme
 from app.auth.hasher import hasher
 from app.core.config import auth_settings
-from app.db import UserDAL, User, get_async_session
+from app.db.dals import UserDAL
+from app.db.models import User
+from app.db.session import get_async_session
 
 
 async def _get_user_by_email_for_auth(

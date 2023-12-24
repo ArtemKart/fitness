@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.hasher import hasher
 from app.auth.schemas import UserCreate, UserRead
-from app.db import UserDAL
+from app.db.dals import UserDAL
 
 
 async def create_user(data: UserCreate, session: AsyncSession):
