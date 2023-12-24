@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 
 from app.auth.actions.auth import get_current_user_from_token
-from app.db import User
+from app.db.models import User
 from app.pages.template import templates
 
 router_main = APIRouter(tags=["Main"])

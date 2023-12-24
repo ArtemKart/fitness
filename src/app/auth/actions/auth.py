@@ -10,7 +10,7 @@ from app.db.models import User
 from app.db.session import get_async_session
 
 
-async def _get_user_by_email_for_auth(
+async def get_user_by_email(
     email: str, session: AsyncSession = Depends(get_async_session)
 ) -> User | None:
     async with session.begin():
@@ -21,7 +21,7 @@ async def _get_user_by_email_for_auth(
 async def authenticate_user(
     email: str, password: str, session: AsyncSession
 ) -> User | None:
-    user = await _get_user_by_email_for_auth(email=email, session=session)
+    user = await get_user_by_email(email=email, session=session)
     if user is not None and hasher.verify_password(password, user.hashed_password):
         return user
     return None
@@ -48,7 +48,7 @@ async def get_current_user_from_token(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = await _get_user_by_email_for_auth(email=email, session=session)
+    user = await get_user_by_email(email=email, session=session)
     if user is not None:
         return user
     raise credentials_exception

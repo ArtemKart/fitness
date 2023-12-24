@@ -7,10 +7,10 @@ from app.core.config import auth_settings
 
 async def create_access_token(
     data: dict,
-    expires_delta: timedelta = timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE),
+    expire_time: int
 ):
     to_encode = data.copy()
-    expire_time = datetime.utcnow() + expires_delta
+    expire_time = datetime.utcnow() + timedelta(minutes=expire_time)
     to_encode.update({"exp": expire_time})
     return jwt.encode(
         to_encode,

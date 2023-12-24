@@ -6,8 +6,8 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import APP_PATH
-from app.db import User, Weigh
-from app.db import get_async_session
+from app.db.models import User, Weigh
+from app.db.session import get_async_session
 from app.pages.main_page.router import templates
 from app.weigh_ins.schemas import WeighCreate
 from app.weigh_ins.service import get_history_weighs_plot

@@ -2,8 +2,8 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import User
-from app.db.session import get_async_session
+from src.app.db.models import User
+from src.app.db.session import get_async_session
 
 
 class UserDAL:
@@ -30,7 +30,5 @@ class UserDAL:
         return new_user
 
     async def get_user_by_email(self, email: str) -> User | None:
-        query = select(User).where(User.email == email)
-        result = await self.session.execute(query)
-        user = result.fetchone()
-        return user[0] if user is not None else None
+        result = await self.session.execute(select(User).where(User.email == email))
+        return result.first()[0]

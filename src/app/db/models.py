@@ -8,6 +8,7 @@ from src.app.db.base_class import Base
 
 class User(Base):
     __tablename__ = "user"
+    __table_args__ = {"extend_existing": True}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[int] = mapped_column(String, nullable=False, unique=True)
@@ -19,6 +20,7 @@ class User(Base):
 
 class Weigh(Base):
     __tablename__ = "weigh-history"
+    __table_args__ = {"extend_existing": True}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))

@@ -7,8 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.auth.schemas as schemas
 from app.auth.actions.auth import authenticate_user, get_current_user_from_token
+from app.auth.utils import send_reset_password_email
 from app.core.config import auth_settings
 from app.core.security import create_access_token
+from app.db.dals import UserDAL
 from app.db.models import User
 from app.db.session import get_async_session
 
@@ -28,15 +30,14 @@ async def login_for_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
-    access_token_expires = timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE)
     access_token = await create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.email}, expire_time=auth_settings.ACCESS_TOKEN_EXPIRE
     )
     return {"access_token": access_token, "token_type": "bearer"}  # type: ignore
 
 
-@router.post("/login/test-token", response_model=schemas.UserRead)
-def test_token(current_user: User = Depends(get_current_user_from_token)) -> Any:
+@router.post("/test-token", response_model=schemas.UserRead)
+async def test_token(current_user: User = Depends(get_current_user_from_token)) -> Any:
     """
     Test access token
     """
@@ -44,11 +45,23 @@ def test_token(current_user: User = Depends(get_current_user_from_token)) -> Any
 
 
 @router.post("/password-recovery/{email}", response_model=schemas.Msg)
-def recover_password() -> schemas.Msg:
+async def recover_password(
+    email: str, session: AsyncSession = Depends(get_async_session)
+) -> Any:
     """
     Password Recovery
     """
-    raise NotImplementedError
+    user = await UserDAL(session).get_user_by_email(email)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail=f"The user with email: {email} does not exist.",
+        )
+    password_reset_token = await create_access_token(
+        data={"sub": email}, expire_time=auth_settings.RESET_PASS_TOKEN_EXPIRE
+    )
+    await send_reset_password_email(email_to=user.email, token=password_reset_token)
+    return {"msg": "Password recovery email sent"}
 
 
 @router.post("/reset-password/", response_model=schemas.Msg)
