@@ -28,8 +28,8 @@ async def authenticate_user(
 
 
 async def get_current_user_from_token(
-    session: AsyncSession = Depends(get_async_session),
     token: str = Depends(oauth2_scheme),
+    session: AsyncSession = Depends(get_async_session),
 ) -> User | None:
     if token is None:
         return None

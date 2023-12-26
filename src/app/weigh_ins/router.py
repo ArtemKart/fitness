@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import APP_PATH
 from app.db.models import User, Weigh
 from app.db.session import get_async_session
-from app.pages.main_page.router import templates
+from src.main import templates
 from app.weigh_ins.schemas import WeighCreate
 from app.weigh_ins.service import get_history_weighs_plot
 
@@ -18,16 +18,15 @@ weigh_router = APIRouter(
 )
 
 
-@weigh_router.post("/", response_model=dict[str, str])
+@weigh_router.post("/add", response_model=None)
 async def add_weigh_ins(
     new_weigh: WeighCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(),
-):
+) -> None:
     stmt = insert(Weigh).values(**new_weigh.model_dump() | {"user_id": user.id})
     await session.execute(stmt)
     await session.commit()
-    return {"status": "success"}
 
 
 @weigh_router.get("/history")

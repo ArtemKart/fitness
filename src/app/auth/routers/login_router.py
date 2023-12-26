@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Any
 
 from fastapi import Depends, APIRouter, HTTPException, status
@@ -7,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.auth.schemas as schemas
 from app.auth.actions.auth import authenticate_user, get_current_user_from_token
+from app.auth.hasher import hasher
 from app.auth.utils import send_reset_password_email
 from app.core.config import auth_settings
 from app.core.security import create_access_token
@@ -44,13 +44,11 @@ async def test_token(current_user: User = Depends(get_current_user_from_token)) 
     return current_user
 
 
-@router.post("/password-recovery/{email}", response_model=schemas.Msg)
+@router.post("/password-recovery", response_model=schemas.Msg)
 async def recover_password(
-    email: str, session: AsyncSession = Depends(get_async_session)
+    email: str,
+    session: AsyncSession = Depends(get_async_session),
 ) -> Any:
-    """
-    Password Recovery
-    """
     user = await UserDAL(session).get_user_by_email(email)
     if not user:
         raise HTTPException(
@@ -64,9 +62,16 @@ async def recover_password(
     return {"msg": "Password recovery email sent"}
 
 
-@router.post("/reset-password/", response_model=schemas.Msg)
-def reset_password() -> schemas.Msg:
-    """
-    Reset password
-    """
-    raise NotImplementedError
+@router.post("/password-reset", response_model=schemas.Msg)
+async def reset_password(
+    new_password: str,
+    user: User = Depends(get_current_user_from_token),
+    session: AsyncSession = Depends(get_async_session),
+) -> Any:
+    user = await UserDAL(session).update_user(
+        user.id,
+        hashed_password=hasher.get_password_hash(new_password),
+    )
+    if user is not None:
+        return {"msg": "Password updated successfully"}
+    return HTTPException(status_code=400, detail="Something went wrong.")

@@ -1,8 +1,5 @@
-from app.auth.schemas import Token
-
-
 async def _send_email() -> None:
-    raise NotImplementedError
+    ...
 
 
 async def send_reset_password_email(email_to: str, token: str) -> None:  # noqa
