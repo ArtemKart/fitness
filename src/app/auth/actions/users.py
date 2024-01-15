@@ -9,7 +9,7 @@ from app.db.dals import UserDAL
 
 async def create_user(data: UserCreate, session: AsyncSession):
     async with session.begin():
-        user = get_user_by_email(data.email, session)
+        user = await get_user_by_email(data.email, session)
         if user:
             raise HTTPException(
                 status_code=400,

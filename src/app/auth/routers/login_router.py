@@ -58,7 +58,9 @@ async def recover_password(
     password_reset_token = await create_access_token(
         data={"sub": email}, expire_time=auth_settings.RESET_PASS_TOKEN_EXPIRE
     )
-    await send_reset_password_email(email_to=user.email, token=password_reset_token)
+    await send_reset_password_email(
+        email_to=user.email, token=password_reset_token, username=user.username
+    )
     return {"msg": "Password recovery email sent"}
 
 

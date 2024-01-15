@@ -13,9 +13,8 @@ from app.db.session import get_async_session
 async def get_user_by_email(
     email: str, session: AsyncSession = Depends(get_async_session)
 ) -> User | None:
-    async with session.begin():
-        user_dal = UserDAL(session)
-        return await user_dal.get_user_by_email(email)
+    user_dal = UserDAL(session)
+    return await user_dal.get_user_by_email(email)
 
 
 async def authenticate_user(

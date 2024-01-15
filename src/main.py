@@ -8,9 +8,9 @@ from app.core.config import APP_PATH
 
 app = FastAPI()
 
-app.mount(
-    "../frontend/static", StaticFiles(directory=APP_PATH / "static"), name="static"
-)
+# app.mount(
+#     "../frontend/static", StaticFiles(directory=APP_PATH / "static"), name="static"
+# )
 templates = Jinja2Templates(directory=APP_PATH / "templates")
 
 app.include_router(auth_router)
