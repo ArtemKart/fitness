@@ -1,24 +1,25 @@
-from fastapi import Depends, status, HTTPException
-from jose import jwt, JWTError
+from typing import Annotated
+
+from fastapi import HTTPException, status, Depends
+from jose import jwt
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth.base_config import oauth2_scheme
-from app.auth.hasher import hasher
+from app.api.auth.base_config import oauth2_scheme
+from app.api.auth.hasher import hasher
 from app.core.config import auth_settings
 from app.db.dals import UserDAL
 from app.db.models import User
 from app.db.session import get_async_session
 
 
-async def get_user_by_email(
-    email: str, session: AsyncSession = Depends(get_async_session)
-) -> User | None:
+async def get_user_by_email(email: str, session: Annotated[AsyncSession, Depends(get_async_session)]) -> User | None:
     user_dal = UserDAL(session)
     return await user_dal.get_user_by_email(email)
 
 
 async def authenticate_user(
-    email: str, password: str, session: AsyncSession
+    email: str, password: str, session: Annotated[AsyncSession, Depends(get_async_session)]
 ) -> User | None:
     user = await get_user_by_email(email=email, session=session)
     if user is not None and hasher.verify_password(password, user.hashed_password):
@@ -27,8 +28,8 @@ async def authenticate_user(
 
 
 async def get_current_user_from_token(
-    token: str = Depends(oauth2_scheme),
-    session: AsyncSession = Depends(get_async_session),
+    token: Annotated[str, Depends(oauth2_scheme)],
+    session: Annotated[AsyncSession, Depends(get_async_session)],
 ) -> User | None:
     if token is None:
         return None
@@ -45,7 +46,7 @@ async def get_current_user_from_token(
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-    except JWTError:
+    except (jwt.JWTError, ValidationError):
         raise credentials_exception
     user = await get_user_by_email(email=email, session=session)
     if user is not None:

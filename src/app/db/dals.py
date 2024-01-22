@@ -1,5 +1,5 @@
 from fastapi import Depends
-from sqlalchemy import select, update, and_
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.db.models import User

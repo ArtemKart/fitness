@@ -1,26 +1,24 @@
-from typing import Any
+from typing import Any, Annotated
 
 from fastapi import Depends, APIRouter, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.ext.asyncio import AsyncSession
 
-import app.auth.schemas as schemas
-from app.auth.actions.auth import authenticate_user, get_current_user_from_token
-from app.auth.hasher import hasher
-from app.auth.utils import send_reset_password_email
+import app.api.auth.schemas as schemas
+from app.api.auth.actions.auth import authenticate_user
+from app.api.auth.hasher import hasher
+from app.api.auth.utils import send_reset_password_email
 from app.core.config import auth_settings
 from app.core.security import create_access_token
 from app.db.dals import UserDAL
-from app.db.models import User
-from app.db.session import get_async_session
+from app.api.deps import SessionDep, CurrentUser
 
 router = APIRouter()
 
 
 @router.post("/token", response_model=schemas.Token)
 async def login_for_access_token(
-    credentials: OAuth2PasswordRequestForm = Depends(),
-    session: AsyncSession = Depends(get_async_session),
+    credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
+    session: SessionDep,
 ) -> schemas.Token:
     user = await authenticate_user(
         email=credentials.username, password=credentials.password, session=session
@@ -33,11 +31,11 @@ async def login_for_access_token(
     access_token = await create_access_token(
         data={"sub": user.email}, expire_time=auth_settings.ACCESS_TOKEN_EXPIRE
     )
-    return {"access_token": access_token, "token_type": "bearer"}  # type: ignore
+    return schemas.Token(access_token=access_token, token_type="bearer")
 
 
 @router.post("/test-token", response_model=schemas.UserRead)
-async def test_token(current_user: User = Depends(get_current_user_from_token)) -> Any:
+async def test_token(current_user: CurrentUser) -> Any:
     """
     Test access token
     """
@@ -47,7 +45,7 @@ async def test_token(current_user: User = Depends(get_current_user_from_token)) 
 @router.post("/password-recovery", response_model=schemas.Msg)
 async def recover_password(
     email: str,
-    session: AsyncSession = Depends(get_async_session),
+    session: SessionDep,
 ) -> Any:
     user = await UserDAL(session).get_user_by_email(email)
     if not user:
@@ -61,19 +59,19 @@ async def recover_password(
     await send_reset_password_email(
         email_to=user.email, token=password_reset_token, username=user.username
     )
-    return {"msg": "Password recovery email sent"}
+    return schemas.Msg(msg="Password recovery email sent")
 
 
 @router.post("/password-reset", response_model=schemas.Msg)
 async def reset_password(
     new_password: str,
-    user: User = Depends(get_current_user_from_token),
-    session: AsyncSession = Depends(get_async_session),
-) -> Any:
+    user: CurrentUser,
+    session: SessionDep,
+) -> schemas.Msg | HTTPException:
     user = await UserDAL(session).update_user(
         user.id,
         hashed_password=hasher.get_password_hash(new_password),
     )
     if user is not None:
-        return {"msg": "Password updated successfully"}
+        return schemas.Msg(msg="Password updated successfully")
     return HTTPException(status_code=400, detail="Something went wrong.")

@@ -18,12 +18,12 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
 
 
-class Weigh(Base):
-    __tablename__ = "weigh-history"
+class Weight(Base):
+    __tablename__ = "weight-history"
     __table_args__ = {"extend_existing": True}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     datetime: Mapped[TIMESTAMP] = mapped_column(DateTime, default=datetime.utcnow)
-    weigh: Mapped[int | float] = mapped_column(Float, nullable=False)
+    weight: Mapped[int | float] = mapped_column(Float, nullable=False)
     notes: Mapped[str] = mapped_column(String)

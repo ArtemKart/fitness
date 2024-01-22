@@ -47,3 +47,20 @@ async def send_reset_password_email(email_to: str, token: str, username: str) ->
             "valid_hours": 24,
         },
     )
+
+
+async def send_new_account_email(email_to: str, username: str) -> None:
+    subject = f"New account for user {username}"
+    with open(paths.EMAIL_TEMPLATES_PATH / "new_account.html") as file:
+        template_str = file.read()
+    link = app_settings.SERVER_HOST
+    await _send_email(
+        email_to=email_to,
+        subject=subject,
+        html_template=template_str,
+        params={
+            "email_to": "email_to",
+            "username": username,
+            "link": link,
+        },
+    )

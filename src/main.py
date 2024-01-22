@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
-from app.auth.routers import auth_router
+from app.api.auth.routers import auth_router
+from app.api.weight_ins.router import weight_router
 from app.core.config import APP_PATH
 
 app = FastAPI()
@@ -14,6 +14,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory=APP_PATH / "templates")
 
 app.include_router(auth_router)
+app.include_router(weight_router)
 
 
 # Keep it for debugging
