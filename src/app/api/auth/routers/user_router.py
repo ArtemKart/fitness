@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
-import app.api.auth.schemas as schemas
+from app.api.auth import schemas
 from app.api.auth.actions.users import create_user
 from app.api.deps import SessionDep
 

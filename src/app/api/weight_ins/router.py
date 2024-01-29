@@ -21,7 +21,9 @@ async def add_weight_ins(
     session: SessionDep,
 ) -> weight_schemas.Msg | HTTPException:
     try:
-        stmt = insert(Weight).values(**new_weight.model_dump() | {"user_id": user.id})
+        stmt = insert(Weight).values(
+            **new_weight.model_dump() | {"user_id": user.id}
+        )
         await session.execute(stmt)
         await session.commit()
         return weight_schemas.Msg(msg="Data has been successfuly added.")
@@ -35,7 +37,9 @@ async def get_weight_history(
     session: SessionDep,
 ) -> weight_schemas.WeightRead | HTTPException:
     try:
-        query = select(Weight.weight, Weight.datetime).where(Weight.user_id == user.id)
+        query = select(Weight.weight, Weight.datetime).where(
+            Weight.user_id == user.id
+        )
         result = await session.execute(query)
         result_dict: dict[float | int, datetime.date] = {
             row[1].date(): row[0] for row in result
@@ -53,7 +57,11 @@ async def get_weight_plot(
     user: CurrentUser,
     session: SessionDep,
 ) -> weight_schemas.WeightRead:
-    query = select(Weight.weight, Weight.datetime).where(Weight.user_id == user.id)
+    query = select(Weight.weight, Weight.datetime).where(
+        Weight.user_id == user.id
+    )
     result = await session.execute(query)
     result_dict = {value: date.date() for value, date in result}
-    return weight_schemas.WeightRead(values=list(result_dict.keys()), datetime=list(result_dict.values()))
+    return weight_schemas.WeightRead(
+        values=list(result_dict.keys()), datetime=list(result_dict.values())
+    )

@@ -13,16 +13,22 @@ from app.db.models import User
 from app.db.session import get_async_session
 
 
-async def get_user_by_email(email: str, session: Annotated[AsyncSession, Depends(get_async_session)]) -> User | None:
+async def get_user_by_email(
+    email: str, session: Annotated[AsyncSession, Depends(get_async_session)]
+) -> User | None:
     user_dal = UserDAL(session)
     return await user_dal.get_user_by_email(email)
 
 
 async def authenticate_user(
-    email: str, password: str, session: Annotated[AsyncSession, Depends(get_async_session)]
+    email: str,
+    password: str,
+    session: Annotated[AsyncSession, Depends(get_async_session)],
 ) -> User | None:
     user = await get_user_by_email(email=email, session=session)
-    if user is not None and hasher.verify_password(password, user.hashed_password):
+    if user is not None and hasher.verify_password(
+        password, user.hashed_password
+    ):
         return user
     return None
 

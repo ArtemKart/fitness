@@ -25,9 +25,13 @@ async def create_user(
             hashed_password=hasher.get_password_hash(data.password),
         )
         if user is not None:
-            await send_new_account_email(email_to=user.email, username=user.username)
+            await send_new_account_email(
+                email_to=user.email, username=user.username
+            )
             return UserRead(
                 email=user.email,
                 name=user.name,
             )
-        raise HTTPException(status_code=503, detail=f"User has not beed created.")
+        raise HTTPException(
+            status_code=503, detail="User has not beed created."
+        )

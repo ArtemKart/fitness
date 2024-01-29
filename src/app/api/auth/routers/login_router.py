@@ -3,7 +3,7 @@ from typing import Any, Annotated
 from fastapi import Depends, APIRouter, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-import app.api.auth.schemas as schemas
+from app.api.auth import schemas
 from app.api.auth.actions.auth import authenticate_user
 from app.api.auth.hasher import hasher
 from app.api.auth.utils import send_reset_password_email

@@ -1,9 +1,17 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, TIMESTAMP, Integer, Float, String, DateTime, ForeignKey
+from sqlalchemy import (
+    Boolean,
+    TIMESTAMP,
+    Integer,
+    Float,
+    String,
+    DateTime,
+    ForeignKey,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.app.db.base_class import Base
+from app.db.base_class import Base
 
 
 class User(Base):
@@ -24,6 +32,8 @@ class Weight(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    datetime: Mapped[TIMESTAMP] = mapped_column(DateTime, default=datetime.utcnow)
+    datetime: Mapped[TIMESTAMP] = mapped_column(
+        DateTime, default=datetime.utcnow
+    )
     weight: Mapped[int | float] = mapped_column(Float, nullable=False)
     notes: Mapped[str] = mapped_column(String)
