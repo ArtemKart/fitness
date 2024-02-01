@@ -9,10 +9,6 @@ class WeightCreate(BaseModel):
     notes: Optional[str]
 
 
-class Msg(BaseModel):
-    msg: str
-
-
 class WeightRead(BaseModel):
     values: list[int | float]
     datetime: list[datetime.date]

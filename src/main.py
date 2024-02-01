@@ -5,6 +5,8 @@ from starlette.templating import Jinja2Templates
 from app.api.auth.routers import auth_router
 from app.api.weight_ins.router import weight_router
 from app.core.config import APP_PATH
+from app.api.receipts.router import receipt_router
+
 
 app = FastAPI()
 
@@ -15,7 +17,7 @@ templates = Jinja2Templates(directory=APP_PATH / "templates")
 
 app.include_router(auth_router)
 app.include_router(weight_router)
-
+app.include_router(receipt_router)
 
 # Keep it for debugging
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ from sqlalchemy import insert, select
 from app.db.models import Weight
 import app.api.weight_ins.schemas as weight_schemas
 from app.api.deps import CurrentUser, SessionDep
+from app.api.msg_schema import Msg
 
 weight_router = APIRouter(
     prefix="/weight",
@@ -26,7 +27,7 @@ async def add_weight_ins(
         )
         await session.execute(stmt)
         await session.commit()
-        return weight_schemas.Msg(msg="Data has been successfuly added.")
+        return Msg(msg="Data has been successfuly added.")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
