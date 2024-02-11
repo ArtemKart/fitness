@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 
 from jose import jwt
 
-from app.core.config import auth_settings
+from src.app.core.config import auth_settings
 
 
 async def create_access_token(

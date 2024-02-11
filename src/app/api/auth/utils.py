@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 from emails import Message
 from emails.template import JinjaTemplate
-from app.core.config import paths, stmp_settings, app_settings
+from src.app.core.config import paths, stmp_settings, app_settings
 
 
 async def _send_email(

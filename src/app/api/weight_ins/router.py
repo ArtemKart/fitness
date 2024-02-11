@@ -4,10 +4,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import insert, select
 
-from app.db.models import Weight
-import app.api.weight_ins.schemas as weight_schemas
-from app.api.deps import CurrentUser, SessionDep
-from app.api.msg_schema import Msg
+from src.app.db.models import Weight
+import src.app.api.weight_ins.schemas as weight_schemas
+from src.app.api.deps import CurrentUser, SessionDep
+from src.app.api.msg_schema import Msg
 
 weight_router = APIRouter(
     prefix="/weight",
@@ -20,7 +20,7 @@ async def add_weight_ins(
     new_weight: weight_schemas.WeightCreate,
     user: CurrentUser,
     session: SessionDep,
-) -> weight_schemas.Msg | HTTPException:
+) -> Msg | HTTPException:
     try:
         stmt = insert(Weight).values(
             **new_weight.model_dump() | {"user_id": user.id}

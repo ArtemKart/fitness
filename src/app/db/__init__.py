@@ -1,3 +1,3 @@
-import app.db.models
+import src.app.db.models
 
-from app.db.base_class import Base
+from src.app.db.base_class import Base

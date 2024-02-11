@@ -1,11 +1,11 @@
 from fastapi import HTTPException
 
-from app.api.auth.actions.auth import get_user_by_email
-from app.api.auth.hasher import hasher
-from app.api.auth.schemas import UserCreate, UserRead
-from app.api.auth.utils import send_new_account_email
-from app.db.dals import UserDAL
-from app.api.deps import SessionDep
+from src.app.api.auth.actions.auth import get_user_by_email
+from src.app.api.auth.hasher import hasher
+from src.app.api.auth.schemas import UserCreate, UserRead
+from src.app.api.auth.utils import send_new_account_email
+from src.app.db.dals import UserDAL
+from src.app.api.deps import SessionDep
 
 
 async def create_user(

@@ -2,9 +2,9 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from app.api.auth import schemas
-from app.api.auth.actions.users import create_user
-from app.api.deps import SessionDep
+from src.app.api.auth import schemas
+from src.app.api.auth.actions.users import create_user
+from src.app.api.deps import SessionDep
 
 router = APIRouter()
 

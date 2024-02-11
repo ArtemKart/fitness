@@ -13,7 +13,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.base_class import Base
+from src.app.db.base_class import Base
 
 
 class User(Base):
@@ -88,6 +88,6 @@ class Receipt(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     name: Mapped[str] = mapped_column(String)
-    coocking_time: Mapped[int] = mapped_column(Integer, required=False)
+    coocking_time: Mapped[int] = mapped_column(Integer, default=None)
     food_items: Mapped[dict[str, int | float]] = mapped_column(PickleType)
     description: Mapped[str] = mapped_column(Text)

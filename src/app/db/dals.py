@@ -2,8 +2,8 @@ from fastapi import Depends
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import User
-from app.db.session import get_async_session
+from src.app.db.models import User
+from src.app.db.session import get_async_session
 
 
 class UserDAL:

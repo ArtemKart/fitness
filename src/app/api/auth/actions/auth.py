@@ -5,12 +5,12 @@ from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.auth.base_config import oauth2_scheme
-from app.api.auth.hasher import hasher
-from app.core.config import auth_settings
-from app.db.dals import UserDAL
-from app.db.models import User
-from app.db.session import get_async_session
+from src.app.api.auth.base_config import oauth2_scheme
+from src.app.api.auth.hasher import hasher
+from src.app.core.config import auth_settings
+from src.app.db.dals import UserDAL
+from src.app.db.models import User
+from src.app.db.session import get_async_session
 
 
 async def get_user_by_email(
