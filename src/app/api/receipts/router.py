@@ -19,7 +19,9 @@ async def add_receipt(
     session: SessionDep,
 ) -> Msg:
     try:
-        stmt = insert(Receipt).values(**data.model_dump() | {"user_id": user.id})
+        stmt = insert(Receipt).values(
+            **data.model_dump() | {"user_id": user.id}
+        )
         await session.execute(stmt)
         await session.commit()
         return Msg(msg="Receipt was successfuly added.")

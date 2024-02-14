@@ -60,7 +60,9 @@ class Weight(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    datetime: Mapped[TIMESTAMP] = mapped_column(DateTime, default=datetime.utcnow)
+    datetime: Mapped[TIMESTAMP] = mapped_column(
+        DateTime, default=datetime.utcnow
+    )
     weight: Mapped[int | float] = mapped_column(Float, nullable=False)
     notes: Mapped[str] = mapped_column(String)
 

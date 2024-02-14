@@ -31,7 +31,9 @@ async def _send_email(
     logging.info(f"Send email result: {response}")
 
 
-async def send_reset_password_email(email_to: str, token: str, username: str) -> None:
+async def send_reset_password_email(
+    email_to: str, token: str, username: str
+) -> None:
     subject = f"Password recowery for user {username}"
     with open(
         paths.EMAIL_TEMPLATES_PATH / "reset_password.html", encoding="utf-8"
