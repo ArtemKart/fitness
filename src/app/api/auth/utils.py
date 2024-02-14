@@ -1,9 +1,10 @@
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
 from emails import Message
 from emails.template import JinjaTemplate
-from src.app.core.config import paths, stmp_settings, app_settings
+
+from src.app.core.config import app_settings, paths, stmp_settings
 
 
 async def _send_email(
@@ -30,9 +31,7 @@ async def _send_email(
     logging.info(f"Send email result: {response}")
 
 
-async def send_reset_password_email(
-    email_to: str, token: str, username: str
-) -> None:
+async def send_reset_password_email(email_to: str, token: str, username: str) -> None:
     subject = f"Password recowery for user {username}"
     with open(
         paths.EMAIL_TEMPLATES_PATH / "reset_password.html", encoding="utf-8"

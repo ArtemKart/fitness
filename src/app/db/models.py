@@ -1,14 +1,14 @@
 from datetime import datetime
 
 from sqlalchemy import (
-    Boolean,
     TIMESTAMP,
-    Integer,
+    Boolean,
+    DateTime,
     Float,
+    ForeignKey,
+    Integer,
     PickleType,
     String,
-    DateTime,
-    ForeignKey,
     Text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
@@ -53,16 +53,14 @@ class Weight(Base):
     datetime (TIMESTAMP): the time when record was created. Format: "YYYY-MM-DD HH:MM:SS".
     weight (int | float): weight's value.
     notes (str): additional information to add.
-     """
+    """
 
     __tablename__ = "weight-history"
     __table_args__ = {"extend_existing": True}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    datetime: Mapped[TIMESTAMP] = mapped_column(
-        DateTime, default=datetime.utcnow
-    )
+    datetime: Mapped[TIMESTAMP] = mapped_column(DateTime, default=datetime.utcnow)
     weight: Mapped[int | float] = mapped_column(Float, nullable=False)
     notes: Mapped[str] = mapped_column(String)
 
@@ -77,10 +75,10 @@ class Receipt(Base):
     user_id (int): foreign key relationship with User table.
     name (str): receipt name.
     coocking_time (int): estimated coocking time.
-    food_items (dict[str, int | float]): needed food items and their 
+    food_items (dict[str, int | float]): needed food items and their
         amounts/portions.
     description (str): described coocking process in details.
-     """
+    """
 
     __tablename__ = "receipt"
     __table_args__ = {"extend_existing": True}

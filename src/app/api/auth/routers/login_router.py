@@ -1,16 +1,16 @@
-from typing import Any, Annotated
+from typing import Annotated, Any
 
-from fastapi import Depends, APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.app.api.auth import schemas
 from src.app.api.auth.actions.auth import authenticate_user
 from src.app.api.auth.hasher import hasher
 from src.app.api.auth.utils import send_reset_password_email
+from src.app.api.deps import CurrentUser, SessionDep
 from src.app.core.config import auth_settings
 from src.app.core.security import create_access_token
 from src.app.db.dals import UserDAL
-from src.app.api.deps import SessionDep, CurrentUser
 
 router = APIRouter()
 
@@ -21,7 +21,9 @@ async def login_for_access_token(
     session: SessionDep,
 ) -> schemas.Token:
     user = await authenticate_user(
-        email=credentials.username, password=credentials.password, session=session
+        email=credentials.username,
+        password=credentials.password,
+        session=session,
     )
     if user is None:
         raise HTTPException(

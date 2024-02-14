@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class ReceiptCreate(BaseModel):
     name: str
     coocking_time: int

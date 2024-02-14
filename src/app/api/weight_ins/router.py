@@ -4,10 +4,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import insert, select
 
-from src.app.db.models import Weight
 import src.app.api.weight_ins.schemas as weight_schemas
 from src.app.api.deps import CurrentUser, SessionDep
 from src.app.api.msg_schema import Msg
+from src.app.db.models import Weight
 
 weight_router = APIRouter(
     prefix="/weight",

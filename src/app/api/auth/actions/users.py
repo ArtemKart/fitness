@@ -4,8 +4,8 @@ from src.app.api.auth.actions.auth import get_user_by_email
 from src.app.api.auth.hasher import hasher
 from src.app.api.auth.schemas import UserCreate, UserRead
 from src.app.api.auth.utils import send_new_account_email
-from src.app.db.dals import UserDAL
 from src.app.api.deps import SessionDep
+from src.app.db.dals import UserDAL
 
 
 async def create_user(

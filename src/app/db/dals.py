@@ -30,12 +30,19 @@ class UserDAL:
         return new_user
 
     async def update_user(self, user_id: int, **kwargs):
-        query = update(User).where(User.id == user_id).values(kwargs).returning(User)
+        query = (
+            update(User)
+            .where(User.id == user_id)
+            .values(kwargs)
+            .returning(User)
+        )
         result = await self.session.execute(query)
         if res := result.first():
             return res[0]
 
     async def get_user_by_email(self, email: str) -> User | None:
-        result = await self.session.execute(select(User).where(User.email == email))
+        result = await self.session.execute(
+            select(User).where(User.email == email)
+        )
         if res := result.first():
             return res[0]

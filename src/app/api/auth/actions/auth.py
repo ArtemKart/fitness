@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import HTTPException, status, Depends
+from fastapi import Depends, HTTPException, status
 from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession

@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import insert, select
-from src.app.api.receipts.schemas import ReceiptCreate, ReceiptRead
 
-from src.app.db.models import Receipt
 from src.app.api.deps import CurrentUser, SessionDep
 from src.app.api.msg_schema import Msg
-
+from src.app.api.receipts.schemas import ReceiptCreate, ReceiptRead
+from src.app.db.models import Receipt
 
 receipt_router = APIRouter(
     prefix="/receipt",

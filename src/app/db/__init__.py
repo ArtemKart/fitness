@@ -1,3 +1,2 @@
-import src.app.db.models
-
-from src.app.db.base_class import Base
+import src.app.db.models  # noqa: F401
+from src.app.db.base_class import Base  # noqa: F401
