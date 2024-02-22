@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+
 from src.app.core.config import db_settings
 
 SQLALCHEMY_DATABASE_URL = str(

@@ -14,10 +14,10 @@ endif
 
 .PHONY: install lint run down clean
 
-$(VENV_ACTIVATE): requirements.txt
+$(VENV_ACTIVATE): pyproject.toml .pre-commit-config.yaml
 	python3.11 -m venv .venv
 	. $(VENV_ACTIVATE) && pip install --upgrade pip \
-	&& pip install -r requirements.txt
+	&& pip install -U .[dev] .
 
 install: $(VENV_ACTIVATE)
 

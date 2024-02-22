@@ -1,6 +1,6 @@
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Query, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.app.api.auth import schemas
@@ -46,8 +46,8 @@ async def test_token(current_user: CurrentUser) -> Any:
 
 @router.post("/password-recovery", response_model=schemas.Msg)
 async def recover_password(
-    email: str,
     session: SessionDep,
+    email: str = Form(...),
 ) -> Any:
     user = await UserDAL(session).get_user_by_email(email)
     if not user:
@@ -66,9 +66,9 @@ async def recover_password(
 
 @router.post("/password-reset", response_model=schemas.Msg)
 async def reset_password(
-    new_password: str,
     user: CurrentUser,
     session: SessionDep,
+    new_password: str = Form(...),
 ) -> schemas.Msg | HTTPException:
     user = await UserDAL(session).update_user(
         user.id,

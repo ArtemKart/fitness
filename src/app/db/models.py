@@ -50,7 +50,8 @@ class Weight(Base):
     ----------
     id (int): weight id.
     user_id (int): foreign key relationship with User table.
-    datetime (TIMESTAMP): the time when record was created. Format: "YYYY-MM-DD HH:MM:SS".
+    datetime (TIMESTAMP): the time when record was created.
+        Format: "YYYY-MM-DD HH:MM:SS".
     weight (int | float): weight's value.
     notes (str): additional information to add.
     """
