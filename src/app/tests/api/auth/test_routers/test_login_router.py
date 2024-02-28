@@ -4,12 +4,6 @@ import pytest
 from src.app.tests.utils import super_user
 
 
-credentials = {
-    "username": super_user.username,
-    "password": super_user.password,
-}
-
-
 @pytest.mark.parametrize(
     "credentials, exp_status_code",
     [

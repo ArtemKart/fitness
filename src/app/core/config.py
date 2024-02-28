@@ -42,13 +42,9 @@ class Paths(BaseSettings):
     EMAIL_TEMPLATES_PATH: Path = APP_PATH / "email-templates" / "build"
 
 
-TEST_DATABASE_URL = os.environ.get(
-    "TEST_DATABASE_URL",
-    default="postgresql+asyncpg://postgres_test:postgres_test@0.0.0.0:5433/postgres_test",
-)
-
-app_settings = AppSettings()
-db_settings = DbSettings()
-auth_settings = AuthSettings()
-paths = Paths()
-stmp_settings = StmpSettings()
+class TestDbSettings(BaseSettings):
+    TEST_USER: str = os.environ.get("DB_USER")
+    TEST_PASSWORD: str = os.environ.get("DB_PASS")
+    TEST_HOST: str = os.environ.get("DB_HOST")
+    TEST_PORT: str = os.environ.get("DB_PORT")
+    TEST_DB: str = os.environ.get("DB_NAME")

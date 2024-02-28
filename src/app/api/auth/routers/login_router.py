@@ -8,7 +8,7 @@ from src.app.api.auth.actions.auth import authenticate_user
 from src.app.api.auth.hasher import hasher
 from src.app.api.auth.utils import send_reset_password_email
 from src.app.api.deps import CurrentUser, SessionDep
-from src.app.core.config import auth_settings
+from src.app.core import auth_settings
 from src.app.core.security import create_access_token
 from src.app.db.dals import UserDAL
 
