@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  api:
-    build: .
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
-    container_name: api
-    depends_on:
-      - postgres
-    env_file:
-      - .env
-    ports:
-      - "8070:8000"
-
   postgres:
     image: postgres:latest
     restart: unless-stopped
@@ -20,7 +9,6 @@ services:
       - "5432:5432"
     env_file:
       - .env
-
 
   test:
     image: postgres:latest
@@ -37,5 +25,17 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data/
 
+  api:
+    build:
+      context: .
+    command: ["/code/docker/app.sh"]
+    container_name: api
+    depends_on:
+      - postgres
+      - test
+    env_file:
+      - .env
+    ports:
+      - "8070:8000"
 volumes:
   db-data:

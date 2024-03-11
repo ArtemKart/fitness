@@ -1,3 +1,4 @@
+import os
 import random
 import string
 
@@ -11,10 +12,11 @@ def random_lower_string() -> str:
 def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
 
-# todo: get superuser credentials from env
 class SuperUser(BaseModel):
-    username: str = "artem@ro.ru"
-    password: str = "artem1996"
+   username: str = os.environ.get("SUPER_USERNAME")
+   email: str = os.environ.get("SUPER_EMAIL")
+   name :str = os.environ.get("SUPER_NAME")
+   password: str = os.environ.get("SUPER_PASSWORD")
 
 
 class TestUser(BaseModel):
@@ -27,11 +29,11 @@ class TestUser(BaseModel):
 super_user = SuperUser()
 test_user = TestUser()
 
-def get_test_user_token_headers(client: TestClient) -> dict[str, str]:
+def get_superuser_token_headers(client: TestClient) -> dict[str, str]:
     r = client.post(
         "/login/token",
         data={
-            "username": super_user.username,
+            "username": super_user.email,
             "password": super_user.password,
         },
     )

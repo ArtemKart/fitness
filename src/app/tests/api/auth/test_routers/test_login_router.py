@@ -9,7 +9,7 @@ from src.app.tests.utils import super_user
     [
         pytest.param(
             {
-                "username": super_user.username,
+                "username": super_user.email,
                 "password": super_user.password,
             },
             200,
@@ -48,7 +48,7 @@ def test_login_for_access_token(
     "username, exp_status_code",
     [
         pytest.param(
-            super_user.username,
+            super_user.email,
             200,
             id="happy path",
         ),
@@ -69,12 +69,12 @@ def test_recover_password(
 
 
 def test_password_reset(
-    client: TestClient, test_user_token_headers: dict[str, str]
+    client: TestClient, test_superuser_token_headers
 ) -> None:
     expected_response = "Password updated successfully"
     r = client.post(
         "/login/password-reset",
-        headers=test_user_token_headers,
+        headers=test_superuser_token_headers,
         data={"new_password": "test12345"},
     )
     response = r.json()

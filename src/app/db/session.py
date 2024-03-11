@@ -8,11 +8,12 @@ from sqlalchemy.ext.asyncio import (
 
 from src.app.core import db_settings
 
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql+asyncpg://{db_settings.POSTGRES_USER}:"
-    f"{db_settings.POSTGRES_PASSWORD}@{db_settings.POSTGRES_HOST}:"
-    f"{db_settings.POSTGRES_PORT}/{db_settings.POSTGRES_DB}"
-)
+# SQLALCHEMY_DATABASE_URL = (
+#     f"postgresql+asyncpg://{db_settings.POSTGRES_USER}:"
+#     f"{db_settings.POSTGRES_PASSWORD}@{db_settings.POSTGRES_HOST}:"
+#     f"{db_settings.POSTGRES_PORT}/{db_settings.POSTGRES_DB}"
+# )
+SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
 
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 async_session_maker = async_sessionmaker(

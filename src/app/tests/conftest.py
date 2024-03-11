@@ -3,15 +3,18 @@ from typing import Generator, Any, AsyncGenerator
 
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import insert
 from sqlalchemy.pool import NullPool
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.api.auth.hasher import hasher
+from app.db.models import User
 from src.app.db.base_class import meta
 from src.app.core import test_db_settings
 from src.app.db.session import get_async_session
-from src.app.tests.utils import get_test_user_token_headers
+from src.app.tests.utils import SuperUser, get_superuser_token_headers
 from src.main import app
 
 
@@ -23,22 +26,15 @@ def event_loop(request):  # noqa
     loop.close()
 
 
-@pytest.fixture(scope="function")
-async def client() -> Generator[TestClient, Any, None]:
-    app.dependency_overrides[get_async_session] = test_async_session  # noqa
-    with TestClient(app) as client:
-        yield client
-
-
 @pytest.fixture(scope="session")
 async def ac() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with AsyncClient(app=app, base_url="http://localhost:8070/") as ac:
         yield ac
 
 
 @pytest.fixture(scope="module")
-def test_user_token_headers(client: TestClient) -> dict[str, str]:
-    return get_test_user_token_headers(client)
+def test_superuser_token_headers(client: TestClient) -> dict[str, str]:
+    return get_superuser_token_headers(client)
 
 
 test_db_url = (
@@ -52,11 +48,33 @@ async_session_maker = sessionmaker(
 )
 meta.bind = engine_test
 
+@pytest.fixture(scope="session")
+async def client() -> Generator[TestClient, Any, None]:
+    app.dependency_overrides[get_async_session] = override_get_async_session
+    with TestClient(app) as client:
+        yield client
 
-@pytest.fixture(autouse=True, scope="session")
+
+async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session
+
+app.dependency_overrides[get_async_session] = override_get_async_session
+
+@pytest.fixture(autouse=True, scope='session')
 async def prepare_database():
     async with engine_test.begin() as conn:
         await conn.run_sync(meta.create_all)
+        super_user = SuperUser()
+        query = insert(User).values(
+            username=super_user.username,
+            email=super_user.email,
+            name=super_user.name,
+            hashed_password=hasher.get_password_hash(super_user.password)
+        )
+        await conn.execute(query)
+        await conn.commit()
+
     yield
     async with engine_test.begin() as conn:
         await conn.run_sync(meta.drop_all)
